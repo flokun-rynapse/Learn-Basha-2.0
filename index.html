@@ -3,200 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn Bhasha 2.0</title>
+    <title>GHSS Koduvally - Bhasha Hub</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            background-color: #2c3e50;
-            font-family: sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
+        /* Shared & Switcher Styles */
+        :root { --primary: #FF4757; --secondary: #2ED573; --accent: #1E90FF; --bg: #F1F2F6; }
+        body { font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; margin: 0; background-color: #2F3542; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+        .app-shell { width: 100%; max-width: 414px; background: var(--bg); display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.5); position: relative; }
+        
+        /* Navigation Bottom Bar */
+        .bottom-nav { display: flex; background: #fff; border-top: 2px solid #ddd; height: 60px; z-index: 2000; }
+        .nav-btn { flex: 1; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; color: #57606F; }
+        .nav-btn.active { color: var(--primary); }
+        .nav-btn span { font-size: 1.5rem; }
 
-        /* Phone Frame */
-        .phone-frame {
-            width: 375px; 
-            height: 100%;
-            background: #fff;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid #444;
-            border-right: 1px solid #444;
-        }
+        /* Containers */
+        .view-container { flex: 1; overflow-y: auto; display: none; }
+        .view-container.active { display: flex; flex-direction: column; }
 
-        .header {
-            background: #2980b9;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
+        /* --- STYLES FROM CODE 1 --- */
+        header { background: white; padding: 15px; text-align: center; border-bottom: 4px solid var(--primary); }
+        .lang-switch { display: flex; padding: 10px; gap: 10px; background: white; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s; background: #dfe4ea; }
+        .btn-ml.active { background: var(--secondary); color: white; }
+        .btn-en.active { background: var(--accent); color: white; }
+        #content-grid { flex-grow: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
+        .card { background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-bottom: 5px solid #ddd; cursor: pointer; }
+        .card:active { transform: translateY(4px); border-bottom: 2px solid #ddd; }
+        .letter-display { font-size: 3.5rem; font-weight: bold; color: #2F3542; display: block; }
+        .word-display { font-size: 1.2rem; color: #57606F; margin-top: 5px; display: block; }
+        .emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
+        footer { background: white; padding: 15px; text-align: center; font-weight: bold; color: var(--primary); }
 
+        /* --- STYLES FROM CODE 2 --- */
+        .phone-frame { width: 100%; height: 100%; background: #fff; position: relative; display: flex; flex-direction: column; }
+        .g-header { background: #2980b9; color: white; padding: 15px; text-align: center; }
         #score { font-size: 24px; font-weight: bold; }
-
-        .game-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            background: #ecf0f1;
-        }
-
-        #drop-zone {
-            width: 90%;
-            height: 60px;
-            background: white;
-            border: 3px dashed #bdc3c7;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 20px;
-        }
-
-        .letters-pool {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
-            background: #dfe6e9;
-        }
-
-        .letter-tile {
-            width: 45px;
-            height: 45px;
-            background: #3498db;
-            color: white;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: move;
-            box-shadow: 0 4px #2980b9;
-        }
-
-        button {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            width: 85%;
-            margin-bottom: 10px;
-        }
-
+        .game-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; background: #ecf0f1; }
+        #drop-zone { width: 90%; height: 60px; background: white; border: 3px dashed #bdc3c7; border-radius: 15px; display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 20px; }
+        .letters-pool { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 20px; background: #dfe6e9; }
+        .letter-tile { width: 45px; height: 45px; background: #3498db; color: white; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; cursor: move; box-shadow: 0 4px #2980b9; }
+        .g-submit { background: #27ae60; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 30px; cursor: pointer; width: 85%; margin-bottom: 10px; }
         #clear-btn { background: #e67e22; }
-
-        /* Footer Style */
-        .footer {
-            background: #34495e;
-            color: #bdc3c7;
-            text-align: center;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* Offline Overlay */
-        #offline-overlay {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            color: white;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            text-align: center;
-            padding: 20px;
-        }
-
-        #win-screen {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.95);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
+        .g-footer { background: #34495e; color: #bdc3c7; text-align: center; padding: 10px; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+        #offline-overlay, #win-screen { display: none; position: absolute; inset: 0; flex-direction: column; justify-content: center; align-items: center; z-index: 3000; text-align: center; padding: 20px; }
+        #offline-overlay { background: rgba(0,0,0,0.85); color: white; }
+        #win-screen { background: rgba(255,255,255,0.95); }
         .cup-img { font-size: 100px; animation: bounce 1s infinite; }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     </style>
 </head>
 <body>
 
-<div class="phone-frame">
+<div class="app-shell">
     <div id="offline-overlay">
         <div style="font-size: 50px;">📡</div>
         <h2>Offline</h2>
-        <p>This game requires an internet connection. Please connect to continue.</p>
+        <p>This app requires an internet connection to speak and verify words. Please connect to continue.</p>
     </div>
 
-    <div class="header">
-        <div>WORDS FOUND</div>
-        <div id="score">0 / 10</div>
+    <div id="view-learn" class="view-container active">
+        <header><h2 style="margin:0; color:var(--primary)">🍎 Let's Learn!</h2></header>
+        <div class="lang-switch">
+            <button class="btn btn-ml active" onclick="loadContent('ml')">മലയാളം</button>
+            <button class="btn btn-en" onclick="loadContent('en')">English</button>
+        </div>
+        <div id="content-grid"></div>
+        <footer>GHSS Koduvally (Clikture)</footer>
     </div>
 
-    <div class="game-area">
-        <div id="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <button onclick="checkWord()">SUBMIT WORD</button>
-        <button id="clear-btn" onclick="clearDropZone()">CLEAR</button>
-        <p id="status-msg" style="text-align: center; font-weight: bold;"></p>
+    <div id="view-game" class="view-container">
+        <div class="phone-frame">
+            <div class="g-header">
+                <div>WORDS FOUND</div>
+                <div id="score">0 / 10</div>
+            </div>
+            <div class="game-area">
+                <div id="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                <button class="g-submit" onclick="checkWord()">SUBMIT WORD</button>
+                <button class="g-submit" id="clear-btn" onclick="clearDropZone()">CLEAR</button>
+                <p id="status-msg" style="text-align: center; font-weight: bold; margin-top:10px;"></p>
+            </div>
+            <div class="letters-pool" id="pool"></div>
+            <div class="g-footer">GHSS Koduvally</div>
+            <div id="win-screen">
+                <div class="cup-img">🏆</div>
+                <h1>CHAMPION!</h1>
+                <p>You found 10 valid words!</p>
+                <button class="g-submit" onclick="location.reload()" style="width: auto;">PLAY AGAIN</button>
+            </div>
+        </div>
     </div>
 
-    <div class="letters-pool" id="pool"></div>
-
-    <div class="footer">
-        GHSS Koduvally
-    </div>
-
-    <div id="win-screen">
-        <div class="cup-img">🏆</div>
-        <h1>CHAMPION!</h1>
-        <p>You found 10 valid words!</p>
-        <button onclick="location.reload()" style="width: auto;">PLAY AGAIN</button>
-    </div>
+    <nav class="bottom-nav">
+        <button class="nav-btn active" id="nav-l" onclick="showView('learn')"><span>📖</span>Learn</button>
+        <button class="nav-btn" id="nav-g" onclick="showView('game')"><span>🎮</span>Play</button>
+    </nav>
 </div>
 
 <script>
-    let score = 0;
-    const pool = document.getElementById('pool');
-    const dropZone = document.getElementById('drop-zone');
-    const msg = document.getElementById('status-msg');
-    const offlineOverlay = document.getElementById('offline-overlay');
-
-    function updateOnlineStatus() {
-        if (navigator.onLine) {
-            offlineOverlay.style.display = 'none';
-        } else {
-            offlineOverlay.style.display = 'flex';
-        }
+    /* --- COMMON LOGIC --- */
+    function showView(view) {
+        document.getElementById('view-learn').classList.toggle('active', view === 'learn');
+        document.getElementById('view-game').classList.toggle('active', view === 'game');
+        document.getElementById('nav-l').classList.toggle('active', view === 'learn');
+        document.getElementById('nav-g').classList.toggle('active', view === 'game');
+        if(view === 'game') generateLetters();
     }
 
+    function updateOnlineStatus() {
+        document.getElementById('offline-overlay').style.display = navigator.onLine ? 'none' : 'flex';
+    }
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
 
+    /* --- LOGIC FROM CODE 1 --- */
+    const data = {
+        ml: [
+            {l:'അ', w:'അമ്മ', e:'👩‍👦', s:'Amma'}, {l:'ആ', w:'ആന', e:'🐘', s:'Aana'},
+            {l:'ഇ', w:'ഇല', e:'🍃', s:'Ila'}, {l:'ഈ', w:'ഈച്ച', e:'🪰', s:'Eecha'},
+            {l:'ഉ', w:'ഉരൽ', e:'🥣', s:'Ural'}, {l:'ഊ', w:'ഊഞ്ഞാൽ', e:'🪑', s:'Oonjal'},
+            {l:'ഋ', w:'ഋഷി', e:'🧘', s:'Rishi'}, {l:'എ', w:'എലി', e:'🐭', s:'Eli'},
+            {l:'ഏ', w:'ഏണി', e:'🪜', s:'Eni'}, {l:'ഐ', w:'ഐസ്', e:'🧊', s:'Ice'},
+            {l:'ഒ', w:'ഒട്ടകം', e:'🐪', s:'Ottakam'}, {l:'ഓ', w:'ഓന്ത്', e:'🦎', s:'Oanthu'},
+            {l:'ഔ', w:'ഔഷധം', e:'💊', s:'Oushadham'}, {l:'അം', w:'അംബുജം', e:'🪷', s:'Ambujam'},
+            {l:'അഃ', w:'ദുഃഖം', e:'😢', s:'Dukham'},
+            {l:'ക', w:'കണ്ണാടി', e:'🪞', s:'Kannadi'}, {l:'ഖ', w:'ഖഡ്ഗം', e:'⚔️', s:'Khadgam'},
+            {l:'ഗ', w:'ഗജം', e:'🐘', s:'Gajam'}, {l:'ഘ', w:'ഘടികാരം', e:'⏰', s:'Ghadikaram'},
+            {l:'ങ', w:'മാങ്ങ', e:'🥭', s:'Maanga'}, {l:'ച', w:'ചക്ര', e:'🎡', s:'Chakram'},
+            {l:'ഛ', w:'ഛായ', e:'☕', s:'Chaya'}, {l:'ജ', w:'ജലം', e:'💧', s:'Jalam'},
+            {l:'ഝ', w:'ഝാൻസി', e:'🐎', s:'Jhansi'}, {l:'ഞ', w:'ഞണ്ട്', e:'🦀', s:'Njandu'},
+            {l:'ട', w:'ടയർ', e:'🛞', s:'Tire'}, {l:'ഠ', w:'പാഠം', e:'📖', s:'Paadam'},
+            {l:'ഡ', w:'ഡബ്ബ', e:'📦', s:'Dabba'}, {l:'ഢ', w:'ഢക്ക', e:'🥁', s:'Dhakka'},
+            {l:'ണ', w:'പണം', e:'💰', s:'Panam'}, {l:'ത', w:'തല', e:'👱', s:'Thala'},
+            {l:'ഥ', w:'രഥം', e:'🛒', s:'Ratham'}, {l:'ദ', w:'ദയ', e:'❤️', s:'Daya'},
+            {l:'ധ', w:'ധനം', e:'🪙', s:'Dhanam'}, {l:'ന', w:'നരി', e:'🦊', s:'Nari'},
+            {l:'പ', w:'പന്ത്', e:'⚽', s:'Panthu'}, {l:'ഫ', w:'ഫലം', e:'🍏', s:'Phalam'},
+            {l:'ബ', w:'ബസ്', e:'🚌', s:'Bus'}, {l:'ഭ', w:'ഭക്ഷണം', e:'🍱', s:'Bhakshanam'},
+            {l:'മ', w:'മരം', e:'🌳', s:'Maram'}, {l:'യ', w:'യമുന', e:'🌊', s:'Yamuna'},
+            {l:'ര', w:'രവി', e:'☀️', s:'Ravi'}, {l:'ല', w:'ലത', e:'🌿', s:'Latha'},
+            {l:'വ', w:'വല', e:'🕸️', s:'Vala'}, {l:'ശ', w:'ശരം', e:'🏹', s:'Sharam'},
+            {l:'ഷ', w:'ഷൺമുഖം', e:'🔱', s:'Shanmukham'}, {l:'സ', w:'സഞ്ചി', e:'🛍️', s:'Sanchi'},
+            {l:'ഹ', w:'ഹാരം', e:'📿', s:'Haaram'}, {l:'ള', w:'വാള', e:'🗡️', s:'Vaala'},
+            {l:'ഴ', w:'പുഴ', e:'🛶', s:'Puzha'}, {l:'റ', w:'അറ', e:'🛖', s:'Ara'}
+        ],
+        en: [
+            {l:'A', w:'Apple', e:'🍎'}, {l:'B', w:'Ball', e:'⚽'}, {l:'C', w:'Cat', e:'🐱'},
+            {l:'D', w:'Dog', e:'🐶'}, {l:'E', w:'Egg', e:'🥚'}, {l:'F', w:'Fish', e:'🐟'},
+            {l:'G', w:'Grapes', e:'🍇'}, {l:'H', w:'Hat', e:'🎩'}, {l:'I', w:'Igloo', e:'❄️'},
+            {l:'J', w:'Jam', e:'🍓'}, {l:'K', w:'Kite', e:'🪁'}, {l:'L', w:'Lion', e:'🦁'},
+            {l:'M', w:'Monkey', e:'🐵'}, {l:'N', w:'Nose', e:'👃'}, {l:'O', w:'Orange', e:'🍊'},
+            {l:'P', w:'Parrot', e:'🦜'}, {l:'Q', w:'Queen', e:'👸'}, {l:'R', w:'Rabbit', e:'🐰'},
+            {l:'S', w:'Sun', e:'☀️'}, {l:'T', w:'Tiger', e:'🐯'}, {l:'U', w:'Umbrella', e:'☂️'},
+            {l:'V', w:'Van', e:'🚐'}, {l:'W', w:'Watch', e:'⌚'}, {l:'X', w:'Xylophone', e:'🎹'},
+            {l:'Y', w:'Yo-yo', e:'🪀'}, {l:'Z', w:'Zebra', e:'🦓'}
+        ]
+    };
+
+    function loadContent(lang) {
+        const container = document.getElementById('content-grid');
+        container.innerHTML = '';
+        document.querySelector('.btn-ml').classList.toggle('active', lang === 'ml');
+        document.querySelector('.btn-en').classList.toggle('active', lang === 'en');
+        data[lang].forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const speechText = lang === 'en' ? `${item.l} for ${item.w}` : item.s;
+            card.onclick = () => { if(navigator.onLine) playSound(speechText, lang); else updateOnlineStatus(); };
+            card.innerHTML = `<span class="emoji">${item.e}</span><span class="letter-display">${item.l}</span><span class="word-display">${item.w}</span>`;
+            container.appendChild(card);
+        });
+    }
+
+    function playSound(text, lang) {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google US English') || v.name.includes('Samantha') || v.name.includes('Zira'));
+        if (femaleVoice) msg.voice = femaleVoice;
+        msg.lang = lang === 'ml' ? 'ml-IN' : 'en-US';
+        msg.rate = 0.6; msg.pitch = 1.6;
+        window.speechSynthesis.speak(msg);
+    }
+
+    /* --- LOGIC FROM CODE 2 --- */
+    let gameScore = 0;
+    const pool = document.getElementById('pool');
+    const dropZone = document.getElementById('drop-zone');
+    const msg = document.getElementById('status-msg');
+
     function generateLetters() {
+        if(pool.children.length > 0) return; 
         pool.innerHTML = '';
         const chars = "EEEEAAIIOOOOTTTNNNRRRSSSLDDUU"; 
         for(let i=0; i<12; i++) {
@@ -207,64 +204,38 @@
             div.id = 'tile-' + Math.random();
             div.innerText = char;
             div.ondragstart = (e) => e.dataTransfer.setData("text", e.target.id);
+            div.onclick = () => dropZone.appendChild(div); // Tap support
             pool.appendChild(div);
         }
     }
 
     function allowDrop(ev) { ev.preventDefault(); }
-
-    function drop(ev) {
-        ev.preventDefault();
-        let id = ev.dataTransfer.getData("text");
-        let tile = document.getElementById(id);
-        if(tile) dropZone.appendChild(tile);
-    }
-
-    function clearDropZone() {
-        Array.from(dropZone.children).forEach(tile => pool.appendChild(tile));
-        msg.innerText = "";
-    }
+    function drop(ev) { ev.preventDefault(); let id = ev.dataTransfer.getData("text"); let tile = document.getElementById(id); if(tile) dropZone.appendChild(tile); }
+    function clearDropZone() { Array.from(dropZone.children).forEach(tile => pool.appendChild(tile)); msg.innerText = ""; }
 
     async function checkWord() {
-        if (!navigator.onLine) {
-            updateOnlineStatus();
-            return;
-        }
-
+        if (!navigator.onLine) { updateOnlineStatus(); return; }
         let word = Array.from(dropZone.children).map(t => t.innerText).join('').toLowerCase();
-
-        if(word.length < 2) {
-            msg.innerText = "Word too short!";
-            msg.style.color = "#e74c3c";
-            return;
-        }
-
+        if(word.length < 2) { msg.innerText = "Word too short!"; msg.style.color = "#e74c3c"; return; }
         msg.innerText = "Verifying....";
         msg.style.color = "#34495e";
-
         try {
             const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
             if(response.ok) {
-                score++;
-                document.getElementById('score').innerText = `${score} / 10`;
+                gameScore++;
+                document.getElementById('score').innerText = `${gameScore} / 10`;
                 msg.innerText = "✅ Valid!";
                 msg.style.color = "#27ae60";
                 dropZone.innerHTML = '';
                 generateLetters();
-                
-                if(score >= 10) {
-                    document.getElementById('win-screen').style.display = 'flex';
-                }
-            } else {
-                msg.innerText = "❌ Not a real word!";
-                msg.style.color = "#e74c3c";
-            }
-        } catch (error) {
-            updateOnlineStatus();
-        }
+                if(gameScore >= 10) document.getElementById('win-screen').style.display = 'flex';
+            } else { msg.innerText = "❌ Not a real word!"; msg.style.color = "#e74c3c"; }
+        } catch (error) { updateOnlineStatus(); }
     }
 
-    generateLetters();
+    // Init
+    loadContent('ml');
+    window.speechSynthesis.onvoiceschanged = () => loadContent('ml');
 </script>
 
 </body>
